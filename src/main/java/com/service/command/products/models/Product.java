@@ -1,6 +1,5 @@
 package com.service.command.products.models;
 
-import com.service.command.products.models.*;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,11 +9,11 @@ import lombok.Setter;
 import java.math.BigDecimal;
 
 @Entity
+@Table(name = "product")
 @AllArgsConstructor
 @NoArgsConstructor
-@Table
 @Getter @Setter
-public class Products {
+public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +23,10 @@ public class Products {
     private String name;
     @Column(nullable = false)
     private BigDecimal price;
+    @Column
+    private int stock;
+    @Column
+    private boolean status;
 
     @Enumerated(EnumType.STRING)
     private ProductsCategory category;

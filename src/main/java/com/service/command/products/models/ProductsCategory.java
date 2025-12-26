@@ -1,6 +1,6 @@
 package com.service.command.products.models;
 
-public enum Category {
+public enum ProductsCategory {
     Entrance,
     Salads,
     Background,

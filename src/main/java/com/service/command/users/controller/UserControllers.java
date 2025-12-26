@@ -4,7 +4,6 @@ import com.service.command.users.dto.UserCreateDto;
 import com.service.command.users.models.Users;
 import com.service.command.users.models.UsersRol;
 import com.service.command.users.service.UserService;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,12 +17,12 @@ public class UserControllers {
     @Autowired
     private UserService userService;
 
-    @GetMapping
-    private List<Users> ListAll(){
+    @GetMapping("/list")
+    public List<Users> ListAll(){
         return userService.UserList();
     }
     @PostMapping("/create")
-    private ResponseEntity<?> CreateUser(@RequestBody UserCreateDto create){
+    public ResponseEntity<?> CreateUser(@RequestBody UserCreateDto create){
         Users now = new Users();
         now.setName(create.getName());
         now.setPassword(create.getPassword());
