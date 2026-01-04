@@ -6,10 +6,12 @@ import com.service.command.users.repository.UsersRepository;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.Console;
 import java.lang.module.ResolutionException;
 import java.util.List;
 
@@ -48,5 +50,21 @@ public class UserService {
         Users employee = GetUserForId(id);
         employee.setRol(new_rol);
         repository.save(employee);
+    }
+
+    public void LoginUser(String username,String password){
+
+        if (!repository.findByUsername(username).isPresent()){
+            throw new RuntimeException("The username is not found");
+        }else {
+
+            User login = repository.getByUsername(username);
+
+            if (passwordEncoder.matches(password, login.getPassword())){
+
+                System.out.println("Clavebuena");
+            }
+
+        }
     }
 }

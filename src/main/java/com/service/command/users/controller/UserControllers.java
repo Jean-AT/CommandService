@@ -3,6 +3,7 @@ package com.service.command.users.controller;
 import com.service.command.users.dto.UserCreateDto;
 import com.service.command.users.models.Users;
 import com.service.command.users.models.UsersRol;
+import com.service.command.users.repository.UsersRepository;
 import com.service.command.users.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,13 +17,15 @@ public class UserControllers {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private UsersRepository usersRepository;
 
     @GetMapping("/list")
     public List<Users> ListAll(){
         return userService.UserList();
     }
     @PostMapping("/create")
-    public ResponseEntity<?> CreateUser(@RequestBody UserCreateDto create){
+    public ResponseEntity<?> CreateUser(@RequestBody UserCreateDto create) {
         Users now = new Users();
         now.setName(create.getName());
         now.setPassword(create.getPassword());
@@ -32,6 +35,10 @@ public class UserControllers {
 
         Users nowUser = userService.EmployeeRegistration(now);
         return ResponseEntity.ok(nowUser);
+    }
+    @GetMapping("/login")
+    public void loginUser(@RequestBody String username,String password){
+        userService.LoginUser(username,password);
     }
     @GetMapping("/{id}")
     public Users getId(@PathVariable Long id){
