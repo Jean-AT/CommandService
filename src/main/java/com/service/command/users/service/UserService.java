@@ -52,19 +52,4 @@ public class UserService {
         repository.save(employee);
     }
 
-    public void LoginUser(String username,String password){
-
-        if (!repository.findByUsername(username).isPresent()){
-            throw new RuntimeException("The username is not found");
-        }else {
-
-            User login = repository.getByUsername(username);
-
-            if (passwordEncoder.matches(password, login.getPassword())){
-
-                System.out.println("Clavebuena");
-            }
-
-        }
-    }
 }

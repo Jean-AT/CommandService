@@ -20,6 +20,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -52,11 +53,11 @@ public class OrderService {
             if (product.getStock() < itemDto.getQuantity()) {
                 throw new RuntimeException("Not available stock of a " + product.getName());
             }
-            item.setProduct(product);
+            item.setProductId(product);
             item.setQuantity(itemDto.getQuantity());
             item.setObservations(itemDto.getObservation());
             item.setPriceUnit(product.getPrice());
-            item.setOrder(order);
+            item.setOrderId(order);
 
             BigDecimal subtotal = product.getPrice().multiply(new BigDecimal(itemDto.getQuantity()));
             totalPrice = totalPrice.add(subtotal);
@@ -87,11 +88,11 @@ public class OrderService {
         }
 
         OrderDetails newItem = new OrderDetails();
-        newItem.setProduct(prodaux);
+        newItem.setProductId(prodaux);
         newItem.setQuantity(item.getQuantity());
         newItem.setPriceUnit(prodaux.getPrice());
         newItem.setObservations(item.getObservation());
-        newItem.setOrder(aux);
+        newItem.setOrderId(aux);
 
         aux.getItems().add(newItem);
 
@@ -119,7 +120,7 @@ public class OrderService {
                 .findFirst()
                 .orElseThrow(()-> new RuntimeException("The item is not found"));
 
-        Product product = itemToRemove.getProduct();
+        Product product = itemToRemove.getProductId();
         product.setStock(product.getStock()+itemToRemove.getQuantity());
         productRepository.save(product);
 
@@ -144,6 +145,10 @@ public class OrderService {
         order.setStatus(status);
 
         return  orderRepository.save(order);
+    }
+
+    public Optional<Order> getforId(Long id){
+        return orderRepository.findById(id);
     }
 
     public List<Order> getMyActiveOrders(String username,OrderStatus status) {

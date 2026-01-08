@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@NoArgsConstructor
 @RequestMapping("/order")
 public class OrderController {
 
@@ -42,13 +41,9 @@ public class OrderController {
         return ResponseEntity.ok(orderService.changeStatus(id,status));
     }
 
-    @GetMapping("/list/{user}")
-    public List<Order> listMyOrders(@PathVariable String user){
-        try {
-            return orderService.listMyOrders(user);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    @GetMapping("/list/{id}")
+    public ResponseEntity<?> listMyOrders(@PathVariable Long id){
+        return ResponseEntity.ok(orderService.getforId(id));
     }
 
     @GetMapping("/list/{user}/{status}")

@@ -36,10 +36,6 @@ public class UserControllers {
         Users nowUser = userService.EmployeeRegistration(now);
         return ResponseEntity.ok(nowUser);
     }
-    @GetMapping("/login")
-    public void loginUser(@RequestBody String username,String password){
-        userService.LoginUser(username,password);
-    }
     @GetMapping("/{id}")
     public Users getId(@PathVariable Long id){
         return userService.GetUserForId(id);

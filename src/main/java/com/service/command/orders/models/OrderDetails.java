@@ -21,15 +21,15 @@ public class OrderDetails {
     private Long id;
 
     @ManyToOne
-    private Order order;
+    private Order orderId;
 
     @ManyToOne
-    private Product product;
+    private Product productId;
 
     @Column(nullable = false)
     private int quantity;
 
-    @Column(nullable = false)
+    @Column
     private String observations;
 
     @Column(nullable = false)

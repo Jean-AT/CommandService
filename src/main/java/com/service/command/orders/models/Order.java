@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
-@Table(name = "Order")
+@Table(name = "orders")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter @Setter
@@ -26,13 +26,13 @@ public class Order {
     @ManyToOne
     private Users user;
 
-    @OneToMany
+    @OneToMany(mappedBy = "orderId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderDetails> items;
 
     @Column(nullable = false)
     private Timestamp date;
 
-    @Column(nullable = false)
+    @Column(nullable = false,name = "table_number")
     private int table;
 
     @Column(nullable = false)
