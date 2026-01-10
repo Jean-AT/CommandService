@@ -25,6 +25,8 @@ public class OrderController {
         return ResponseEntity.ok(orderDTO);
     }
 
+
+    //AREGLAR AÑADIR ITEMS A LA ORDEN PROBLEMA EN EL PRECIO SOLO AGARRA EL QUE AÑADE NO EL TOTAL
     @PutMapping("/{id}")
     public ResponseEntity<?> addItemToTheOrder(@PathVariable Long id, @RequestBody OrderDetailsDTO items){
         orderService.addItem(id,items);

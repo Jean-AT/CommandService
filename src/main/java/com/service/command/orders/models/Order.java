@@ -26,7 +26,7 @@ public class Order {
     @ManyToOne
     private Users user;
 
-    @OneToMany(mappedBy = "orderId", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "orderList", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderDetails> items;
 
     @Column(nullable = false)

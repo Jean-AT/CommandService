@@ -1,5 +1,6 @@
 package com.service.command.orders.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.service.command.products.models.Product;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -21,7 +22,9 @@ public class OrderDetails {
     private Long id;
 
     @ManyToOne
-    private Order orderId;
+    @JoinColumn(name="orderList")
+    @JsonIgnore
+    private Order orderList;
 
     @ManyToOne
     private Product productId;

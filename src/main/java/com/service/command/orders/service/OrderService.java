@@ -57,7 +57,7 @@ public class OrderService {
             item.setQuantity(itemDto.getQuantity());
             item.setObservations(itemDto.getObservation());
             item.setPriceUnit(product.getPrice());
-            item.setOrderId(order);
+            item.setOrderList(order);
 
             BigDecimal subtotal = product.getPrice().multiply(new BigDecimal(itemDto.getQuantity()));
             totalPrice = totalPrice.add(subtotal);
@@ -92,7 +92,7 @@ public class OrderService {
         newItem.setQuantity(item.getQuantity());
         newItem.setPriceUnit(prodaux.getPrice());
         newItem.setObservations(item.getObservation());
-        newItem.setOrderId(aux);
+        newItem.setOrderList(aux);
 
         aux.getItems().add(newItem);
 
