@@ -1,17 +1,18 @@
 package com.service.command.users.service;
 
+import com.service.command.config.ConfigAcces;
 import com.service.command.users.models.Users;
 import com.service.command.users.models.UsersRol;
 import com.service.command.users.repository.UsersRepository;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.io.Console;
 import java.lang.module.ResolutionException;
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class UserService {
 
     private final UsersRepository repository;
     private final PasswordEncoder passwordEncoder;
+    private final ConfigAcces setting;
 
 
     public Users EmployeeRegistration(Users user){
@@ -35,21 +37,55 @@ public class UserService {
         return repository.save(user);
     }
 
+    public ResponseEntity<String> Login(String username, String rawPaswrd){
+        if (repository.existsUsersByUsername(username)){
+            Users intro = repository.getUsersByUsername(username);
+            if (passwordEncoder.matches(rawPaswrd,intro.getPassword())){
+                String token = setting.generateToken(intro);
+                ResponseCookie jwtCookie = ResponseCookie.from("HttpsOnly", token)
+                        .httpOnly(true)
+                        .secure(false)
+                        .path("/")
+                        .maxAge(60 * 60)
+                        .sameSite("Lax")
+                        .build();
 
-    public List<Users> UserList(){
-        return repository.findAll();
+                return ResponseEntity.ok()
+                        .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+                        .body("¡Login exitoso! Revisa las cookies de tu navegador.");
+            }
+        }else{
+            return ResponseEntity.status(404).body("Usuario no encontrado");
+        }
+        return null;
+    }
+
+    public List<Users> UserList(String validation){
+        if(setting.validateToken(validation)){
+            return repository.findAll();
+        }else{
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token inválido");
+        }
     }
 
 
-    public Users GetUserForId(Long id){
-        return repository.findById(id)
-                .orElseThrow(()-> new ResolutionException("User not fount "+ id));
+    public Users GetUserForId(Long id,String validation){
+        if(setting.validateToken(validation)){
+            return repository.findById(id)
+                    .orElseThrow(()-> new ResolutionException("User not fount "+ id));
+        }else{
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token inválido");
+        }
     }
 
-    public void ChangeRol(Long id,UsersRol new_rol){
-        Users employee = GetUserForId(id);
-        employee.setRol(new_rol);
-        repository.save(employee);
+    public void ChangeRol(Long id,UsersRol new_rol,String validation){
+        if(setting.validateToken(validation)){
+            Users employee = GetUserForId(id,validation);
+            employee.setRol(new_rol);
+            repository.save(employee);
+        }else{
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token inválido");
+        }
     }
 
 }

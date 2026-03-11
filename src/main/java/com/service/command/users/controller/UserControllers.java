@@ -1,5 +1,7 @@
 package com.service.command.users.controller;
 
+import com.service.command.config.ConfigAcces;
+import com.service.command.products.models.ProductsCategory;
 import com.service.command.users.dto.UserCreateDto;
 import com.service.command.users.models.Users;
 import com.service.command.users.models.UsersRol;
@@ -19,10 +21,16 @@ public class UserControllers {
     private UserService userService;
     @Autowired
     private UsersRepository usersRepository;
+    @Autowired
+    private ConfigAcces setting;
 
-    @GetMapping("/list")
-    public List<Users> ListAll(){
-        return userService.UserList();
+    @GetMapping("/login")
+    public ResponseEntity<String> login(@RequestParam String username, @RequestParam String raw){
+        ResponseEntity<String> respuesta = userService.Login(username, raw);
+        if (respuesta == null) {
+            return ResponseEntity.status(401).body("Contraseña incorrecta");
+        }
+        return respuesta;
     }
     @PostMapping("/create")
     public ResponseEntity<?> CreateUser(@RequestBody UserCreateDto create) {
@@ -36,13 +44,17 @@ public class UserControllers {
         Users nowUser = userService.EmployeeRegistration(now);
         return ResponseEntity.ok(nowUser);
     }
+    @GetMapping("/list")
+    public List<Users> ListAll(@CookieValue(name = "HttpsOnly", required = false) String validation){
+        return userService.UserList(validation);
+    }
     @GetMapping("/{id}")
-    public Users getId(@PathVariable Long id){
-        return userService.GetUserForId(id);
+    public Users getId(@PathVariable Long id,@CookieValue(name = "HttpsOnly", required = false) String validation){
+        return userService.GetUserForId(id,validation);
     }
     @PutMapping("rol/{id}")
-    public ResponseEntity<?> ChangeRol(@PathVariable Long id, @RequestBody UsersRol newRol){
-        userService.ChangeRol(id,newRol);
+    public ResponseEntity<?> ChangeRol(@PathVariable Long id, @RequestBody UsersRol newRol,@CookieValue(name = "HttpsOnly", required = false) String validation){
+        userService.ChangeRol(id,newRol,validation);
         return ResponseEntity.ok("Change the rol ok.");
     }
 }
