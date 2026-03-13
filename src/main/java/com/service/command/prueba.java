@@ -14,7 +14,7 @@ import com.service.command.config.ConfigAcces;
 @RestController
 public class prueba {
 
-    private ConfigAcces setting = new ConfigAcces();
+    private ConfigAcces setting;
     @Autowired
     private UserService userService;
     @Autowired

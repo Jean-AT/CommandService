@@ -4,5 +4,6 @@ public enum UsersRol {
     WaiterUser,
     ChefUser,
     CheckerUser,
-    Admin
+    Admin,
+    Mandated
 }
