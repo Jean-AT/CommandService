@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  mi-app-java:
+    build: .
+    ports:
+      - "1403:8080"  # Ojo: Asegúrate que tu Spring Boot use el puerto 1403 en el application.properties, sino pon "1403:8080"
+    depends_on:
+      - db_image
+
+  db_image:
+    image: postgres:15
+    environment:
+      POSTGRES_PASSWORD: 302511
+      POSTGRES_DB: CommandService
+      POSTGRES_USER: postgres  # <-- CORRECCIÓN AQUÍ (USER en lugar de NAME)
+    ports:
+      - "5432:5432"

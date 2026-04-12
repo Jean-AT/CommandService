@@ -33,7 +33,7 @@ public class UserControllers {
         return respuesta;
     }
     @PostMapping("/create")
-    public ResponseEntity<?> CreateUser(@RequestBody UserCreateDto create) {
+    public ResponseEntity<?> CreateUser(@RequestBody UserCreateDto create,@CookieValue(name = "HttpsOnly", required = false) String validation) {
         Users now = new Users();
         now.setName(create.getName());
         now.setPassword(create.getPassword());

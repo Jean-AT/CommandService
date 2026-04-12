@@ -32,7 +32,7 @@ public class JwtFilter extends OncePerRequestFilter {
         // 1. Buscar la cookie llamada "jwt_gozu"
         if (request.getCookies() != null) {
             for (Cookie cookie : request.getCookies()) {
-                if (cookie.getName().equals("jwt_gozu")) {
+                if (cookie.getName().equals("HttpsOnly")) {
                     token = cookie.getValue();
                 }
             }
@@ -43,7 +43,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
             Claims claims = configAcces.getAllClaimsFromToken(token);
             String username = claims.getSubject();
-            String role = claims.get("role", String.class); // Extraemos el "ROLE_Admin"
+            String role = claims.get("role", String.class); // EEN lla cmanera de como se implementa en la subcapa
 
             // 3. Le decimos a Spring Security quién es y qué rol tiene
             SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role);

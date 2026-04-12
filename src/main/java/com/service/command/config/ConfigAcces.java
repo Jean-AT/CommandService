@@ -8,6 +8,7 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -33,18 +34,19 @@ public class ConfigAcces {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .csrf(csrf -> csrf.disable())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         //User
                         .requestMatchers("/user/login").permitAll()
+                        .requestMatchers("/user/").permitAll()
                         .requestMatchers("/user/**").hasAnyRole("Admin", "Mandated")
-                        .requestMatchers("/user/").hasAnyRole("Admin", "Mandated","WaiterUser","CheckerUser","ChefUser")
 
                         //Productos
+                        .requestMatchers("/product/list").permitAll()
+                        .requestMatchers("/product/list/category").permitAll()
+                        .requestMatchers("/product/list/name").permitAll()
+                        .requestMatchers("/product/nro/").permitAll()
                         .requestMatchers("/product/**").hasAnyRole("Admin", "Mandated")
-                        .requestMatchers("/product/list").hasAnyRole("Admin", "Mandated","WaiterUser","CheckerUser","ChefUser")
-                        .requestMatchers("/product/list/category").hasAnyRole("Admin", "Mandated","WaiterUser","CheckerUser","ChefUser")
-                        .requestMatchers("/product/list/name").hasAnyRole("Admin", "Mandated","WaiterUser","CheckerUser","ChefUser")
-                        .requestMatchers("/product/nro/").hasAnyRole("Admin", "Mandated","WaiterUser","CheckerUser","ChefUser")
 
                         //Order
                         .requestMatchers("/order").hasAnyRole("Admin", "Mandated","WaiterUser","CheckerUser")
